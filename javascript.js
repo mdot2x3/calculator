@@ -41,9 +41,12 @@ function operate(operator, firstNumber, secondNumber) {
 // create calculator input buttons within grid
 let array = [];
 function keyMaker() {
+    let idTag = 0;
     for (let i = 0; i < 16; i++) {
         const keyButton = document.createElement('div');
         keyButton.classList.add('key');
+        idTag += 1;
+        keyButton.setAttribute('id', idTag);
         array.push(keyButton);
     }
 }
@@ -55,3 +58,4 @@ function keyPrinter() {
         keySet.appendChild(array[i]);
     }
 }
+
