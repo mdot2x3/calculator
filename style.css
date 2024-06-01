@@ -6,6 +6,8 @@
 
 html, body {
     height: 100%;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 50px;
 }
 
 .container {
@@ -14,6 +16,10 @@ html, body {
 }
 
 .display {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 20px;
     margin: 10px;
     height: 25%;
     border: 4px solid blue;

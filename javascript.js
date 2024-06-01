@@ -40,7 +40,7 @@ function operate(operator, firstNumber, secondNumber) {
 
 // create calculator input buttons within grid
 let array = [];
-function keyMaker() {
+function makeKey() {
     let idTag = 0;
     let keySymbol = ['1', '2', '3', '+', '4', '5', '6', '-', '7', '8', '9', '*', '0', 'clear', '=', '/'];
 
@@ -58,10 +58,24 @@ function keyMaker() {
 }
 
 // print calculator input buttons within grid
-function keyPrinter() {
+function printKey() {
     for (let i = 0; i < array.length; i++) {
         const keySet = document.querySelector('.calc-container');
         keySet.appendChild(array[i]);
     }
 }
 
+// populate the display
+function updateDisplay(input) {
+    const display = document.querySelector('.display');
+    display.textContent = input;
+}
+
+
+// generate calculator app
+function runApp() {
+makeKey();
+printKey();
+}
+
+runApp();
