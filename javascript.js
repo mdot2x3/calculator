@@ -37,3 +37,21 @@ function operate(operator, firstNumber, secondNumber) {
             break;
     }
 }
+
+// create calculator input buttons within grid
+let array = [];
+function keyMaker() {
+    for (let i = 0; i < 16; i++) {
+        const keyButton = document.createElement('div');
+        keyButton.classList.add('key');
+        array.push(keyButton);
+    }
+}
+
+// print calculator input buttons within grid
+function keyPrinter() {
+    for (let i = 0; i < array.length; i++) {
+        const keySet = document.querySelector('.calc-container');
+        keySet.appendChild(array[i]);
+    }
+}
