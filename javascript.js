@@ -42,11 +42,17 @@ function operate(operator, firstNumber, secondNumber) {
 let array = [];
 function keyMaker() {
     let idTag = 0;
-    for (let i = 0; i < 16; i++) {
+    let keySymbol = ['1', '2', '3', '+', '4', '5', '6', '-', '7', '8', '9', '*', '0', 'clear', '=', '/'];
+
+    for (let i = 0; i < keySymbol.length; i++) {
         const keyButton = document.createElement('div');
         keyButton.classList.add('key');
         idTag += 1;
         keyButton.setAttribute('id', idTag);
+
+        // assign key symbols from array
+        keyButton.textContent = keySymbol[i];
+
         array.push(keyButton);
     }
 }

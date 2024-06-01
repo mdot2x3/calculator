@@ -29,7 +29,10 @@ html, body {
 
 .key {
     flex: 1 0 25%;
-    border: 2px dotted goldenrod;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 25%;
     width: 25%;
+    border: 2px dotted goldenrod;
 }
