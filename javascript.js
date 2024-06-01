@@ -1,4 +1,4 @@
-// calculator input functions
+// calculation functions
 function add(a, b){
     return a + b;
 };
@@ -20,7 +20,7 @@ let firstNumber
 let secondNumber
 let operator
 
-// function to combine input and calc function
+// function to combine input with calc function
 function operate(operator, firstNumber, secondNumber) {
     switch (operator) {
         case '+':
