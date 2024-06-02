@@ -15,10 +15,11 @@ function divide(a, b){
     return a / b;
 };
 
-// variables to store user selection
-let firstNumber
-let secondNumber
-let operator
+// array and variables to store user selection
+let inputArray = [];
+let firstNumber;
+let secondNumber;
+let operator;
 
 // function to combine input with calc function
 function operate(operator, firstNumber, secondNumber) {
@@ -39,7 +40,7 @@ function operate(operator, firstNumber, secondNumber) {
 }
 
 // create calculator input buttons within grid
-let array = [];
+let makeArray = [];
 function makeKey() {
     let idTag = 0;
     let keySymbol = ['1', '2', '3', '+', '4', '5', '6', '-', '7', '8', '9', '*', '0', 'clear', '=', '/'];
@@ -53,15 +54,15 @@ function makeKey() {
         // assign key symbols from array
         keyButton.textContent = keySymbol[i];
 
-        array.push(keyButton);
+        makeArray.push(keyButton);
     }
 }
 
 // print calculator input buttons within grid
 function printKey() {
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i < makeArray.length; i++) {
         const keySet = document.querySelector('.calc-container');
-        keySet.appendChild(array[i]);
+        keySet.appendChild(makeArray[i]);
     }
 }
 
@@ -71,11 +72,31 @@ function updateDisplay(input) {
     display.textContent = input;
 }
 
+// event handler for key click
+function selectKey() {
+    const keys = document.querySelector('.calc-container');
+    keys.addEventListener('click', (e) => {
+        if (e.target.classList.contains('key')) {
+        const keyChoice = e.target.textContent;
+        //console.log(keyChoice);
+        
+        // collect key input into an array
+        inputArray.push(keyChoice);
+        //console.log(inputArray);
+        }
+    });
+}
 
+
+
+
+
+/////////////
 // generate calculator app
 function runApp() {
 makeKey();
 printKey();
+selectKey();
 }
 
 runApp();
