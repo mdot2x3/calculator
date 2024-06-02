@@ -69,7 +69,9 @@ function printKey() {
 // populate the display
 function updateDisplay(input) {
     const display = document.querySelector('.display');
-    display.textContent = input;
+    
+    // stitch together array values
+    display.textContent = input.join('');
 }
 
 // event handler for key click
@@ -78,11 +80,13 @@ function selectKey() {
     keys.addEventListener('click', (e) => {
         if (e.target.classList.contains('key')) {
         const keyChoice = e.target.textContent;
-        //console.log(keyChoice);
         
         // collect key input into an array
         inputArray.push(keyChoice);
-        //console.log(inputArray);
+
+        // run function with array input to display
+        updateDisplay(inputArray);
+        console.log(inputArray);
         }
     });
 }
