@@ -86,7 +86,6 @@ function selectKey() {
 
         // run function with array input to display
         updateDisplay(inputArray);
-        //console.log(inputArray);
         cleanInput();
         }
     });
@@ -114,15 +113,18 @@ function cleanInput() {
             break;
         }
     }
-
         if (operatorIndex != -1) {
             // Slice the inputArray to get first number array
             firstNumberArray = inputArray.slice(0, operatorIndex);
-            console.log(firstNumberArray);
+            // assigning top operator variable here
+            firstNumber = firstNumberArray.join('');
+            console.log(firstNumber);
 
             // Slice the inputArray to get first number array
             secondNumberArray = inputArray.slice(operatorIndex + 1);
-            console.log(secondNumberArray);
+            // assigning top operator variable here
+            secondNumber = secondNumberArray.join('');
+            console.log(secondNumber);
         }
 }
 
