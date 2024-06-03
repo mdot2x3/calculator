@@ -88,6 +88,7 @@ function selectKey() {
         updateDisplay(inputArray);
         cleanInput();
         calcResult(keyChoice);
+        clearCalc(keyChoice);
         }
     });
 }
@@ -127,7 +128,7 @@ function cleanInput() {
         }
 }
 
-// when all top level variables are filled, calculate and display result
+// calculate and display result
 function calcResult(keyChoice) {
     if (keyChoice === '=') {
         if (firstNumber !== undefined && 
@@ -136,14 +137,25 @@ function calcResult(keyChoice) {
         {
             const result = operate(operator, firstNumber, secondNumber);
             updateDisplay([result]);
+
         } else {
-            // clearDisplay function here //
+            clearCalc(keyChoice);
         }
     }
 }
 
-
-
+// clear display, variables, and arrays
+function clearCalc(keyChoice) {
+    if (keyChoice === 'clear') {
+            firstNumber = undefined;
+            secondNumber = undefined;
+            operator = undefined;
+            inputArray = [];
+            updateDisplay([0]);
+    } else if (display.textContent === 'NaN') {
+        // tbd
+    }
+}
 
 /////////////
 // generate calculator app
