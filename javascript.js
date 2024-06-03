@@ -87,6 +87,7 @@ function selectKey() {
         // run function with array input to display
         updateDisplay(inputArray);
         cleanInput();
+        calcResult(keyChoice);
         }
     });
 }
@@ -117,16 +118,30 @@ function cleanInput() {
             // Slice the inputArray to get first number array
             firstNumberArray = inputArray.slice(0, operatorIndex);
             // assigning top operator variable here
-            firstNumber = firstNumberArray.join('');
-            console.log(firstNumber);
+            firstNumber = parseFloat(firstNumberArray.join(''));
 
             // Slice the inputArray to get first number array
             secondNumberArray = inputArray.slice(operatorIndex + 1);
             // assigning top operator variable here
-            secondNumber = secondNumberArray.join('');
-            console.log(secondNumber);
+            secondNumber = parseFloat(secondNumberArray.join(''));
         }
 }
+
+// when all top level variables are filled, calculate and display result
+function calcResult(keyChoice) {
+    if (keyChoice === '=') {
+        if (firstNumber !== undefined && 
+            secondNumber !== undefined && 
+            operator !== undefined)
+        {
+            const result = operate(operator, firstNumber, secondNumber);
+            updateDisplay([result]);
+        } else {
+            // clearDisplay function here //
+        }
+    }
+}
+
 
 
 
