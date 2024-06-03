@@ -86,12 +86,45 @@ function selectKey() {
 
         // run function with array input to display
         updateDisplay(inputArray);
-        console.log(inputArray);
+        //console.log(inputArray);
+        cleanInput();
         }
     });
 }
 
+// split inputArray into separate arrays before after operator, assigning operator
+function cleanInput() {
+    let firstNumberArray = [];
+    let secondNumberArray = [];
+    // set to -1 so it holds a value not run in the loop
+    let operatorIndex = -1;
 
+    // Find the first occurrence of an operator
+    for (let i = 0; i < inputArray.length; i++) {
+        if (inputArray[i] === '+' || 
+            inputArray[i] === '-' ||
+            inputArray[i] === '*' ||
+            inputArray[i] === '/') 
+        {
+            operatorIndex = i;
+            
+            // assigning top operator variable here
+            operator = inputArray[i];
+
+            break;
+        }
+    }
+
+        if (operatorIndex != -1) {
+            // Slice the inputArray to get first number array
+            firstNumberArray = inputArray.slice(0, operatorIndex);
+            console.log(firstNumberArray);
+
+            // Slice the inputArray to get first number array
+            secondNumberArray = inputArray.slice(operatorIndex + 1);
+            console.log(secondNumberArray);
+        }
+}
 
 
 
