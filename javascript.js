@@ -20,6 +20,7 @@ let inputArray = [];
 let firstNumber;
 let secondNumber;
 let operator;
+let storeResult = null;
 
 // function to combine input with calc function
 function operate(operator, firstNumber, secondNumber) {
@@ -80,15 +81,37 @@ function selectKey() {
     keys.addEventListener('click', (e) => {
         if (e.target.classList.contains('key')) {
         const keyChoice = e.target.textContent;
-        
-        // collect key input into an array
-        inputArray.push(keyChoice);
 
-        // run function with array input to display
-        updateDisplay(inputArray);
-        cleanInput();
-        calcResult(keyChoice);
-        clearCalc(keyChoice);
+        if (['+', '-', '*', '/'].includes(keyChoice) && operator !== undefined) {
+            return;
+        }
+
+        if (keyChoice === 'clear') {
+            clearCalc();
+            return;
+        }
+
+        if (!isNaN(keyChoice) || keyChoice === '.') {
+            inputArray.push(keyChoice);
+            updateDisplay(inputArray);
+        } else if (['+', '-', '*', '/'].includes(keyChoice)) {
+            cleanInput();  // Ensure cleanInput is called to assign firstNumber and operator
+            operator = keyChoice;
+            inputArray.push(keyChoice);
+            updateDisplay(inputArray);
+        } else if (keyChoice === '=') {
+            cleanInput();  // Ensure cleanInput is called to assign secondNumber
+            calcResult(keyChoice);
+        }
+        
+        // // collect key input into an array
+        // inputArray.push(keyChoice);
+
+        // // run function with array input to display
+        // updateDisplay(inputArray);
+        // cleanInput();
+        // calcResult(keyChoice);
+        // clearCalc(keyChoice);
         }
     });
 }
@@ -135,27 +158,33 @@ function calcResult(keyChoice) {
             secondNumber !== undefined && 
             operator !== undefined)
         {
-            const result = operate(operator, firstNumber, secondNumber);
+            let result = operate(operator, firstNumber, secondNumber);
+            storeResult = result;
             updateDisplay([result]);
 
+            // Reset inputArray to start fresh with the result
+            inputArray = [result.toString()];
+            firstNumber = result;
+            secondNumber = undefined;
+            operator = undefined;
+
         } else {
-            clearCalc(keyChoice);
+            clearCalc();
         }
     }
 }
 
 // clear display, variables, and arrays
-function clearCalc(keyChoice) {
-    if (keyChoice === 'clear') {
+function clearCalc() {
             firstNumber = undefined;
             secondNumber = undefined;
             operator = undefined;
             inputArray = [];
+            storeResult = null;
             updateDisplay([0]);
-    } else if (display.textContent === 'NaN') {
-        // tbd
-    }
-}
+} 
+
+
 
 /////////////
 // generate calculator app
