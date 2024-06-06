@@ -21,6 +21,7 @@ let firstNumber;
 let secondNumber;
 let operator;
 let storeResult = null;
+let resultCalculated = false;
 
 // function to combine input with calc function
 function operate(operator, firstNumber, secondNumber) {
@@ -82,36 +83,40 @@ function selectKey() {
         if (e.target.classList.contains('key')) {
         const keyChoice = e.target.textContent;
 
-        if (['+', '-', '*', '/'].includes(keyChoice) && operator !== undefined) {
-            return;
-        }
+            // prevent entering multiple operators in sequence
+            if (['+', '-', '*', '/'].includes(keyChoice) && operator !== undefined) {
+                return;
+            }
 
-        if (keyChoice === 'clear') {
-            clearCalc();
-            return;
-        }
+            if (keyChoice === 'clear') {
+                clearCalc();
+                return;
+            }
 
-        if (!isNaN(keyChoice) || keyChoice === '.') {
-            inputArray.push(keyChoice);
-            updateDisplay(inputArray);
-        } else if (['+', '-', '*', '/'].includes(keyChoice)) {
-            cleanInput();  // Ensure cleanInput is called to assign firstNumber and operator
-            operator = keyChoice;
-            inputArray.push(keyChoice);
-            updateDisplay(inputArray);
-        } else if (keyChoice === '=') {
-            cleanInput();  // Ensure cleanInput is called to assign secondNumber
-            calcResult(keyChoice);
-        }
-        
-        // // collect key input into an array
-        // inputArray.push(keyChoice);
-
-        // // run function with array input to display
-        // updateDisplay(inputArray);
-        // cleanInput();
-        // calcResult(keyChoice);
-        // clearCalc(keyChoice);
+            if (!isNaN(keyChoice) || keyChoice === '.') {
+                // clear input array if a result was just calculated
+                if (resultCalculated) {
+                    inputArray = [];
+                    resultCalculated = false;
+                }
+                inputArray.push(keyChoice);
+                updateDisplay(inputArray);
+            } else if (['+', '-', '*', '/'].includes(keyChoice)) {
+                // use the result as the first number if continuing operations
+                if (resultCalculated) {
+                    firstNumber = storeResult;
+                    resultCalculated = false;
+                }
+                // assign firstNumber and operator
+                cleanInput();
+                operator = keyChoice;
+                inputArray.push(keyChoice);
+                updateDisplay(inputArray);
+            } else if (keyChoice === '=') {
+                // assign secondNumber
+                cleanInput();
+                calcResult(keyChoice);
+            }
         }
     });
 }
@@ -123,7 +128,7 @@ function cleanInput() {
     // set to -1 so it holds a value not run in the loop
     let operatorIndex = -1;
 
-    // Find the first occurrence of an operator
+    // find the first occurrence of an operator
     for (let i = 0; i < inputArray.length; i++) {
         if (inputArray[i] === '+' || 
             inputArray[i] === '-' ||
@@ -131,22 +136,18 @@ function cleanInput() {
             inputArray[i] === '/') 
         {
             operatorIndex = i;
-            
             // assigning top operator variable here
             operator = inputArray[i];
-
             break;
         }
     }
         if (operatorIndex != -1) {
-            // Slice the inputArray to get first number array
+            // slice the inputArray to get first number array
             firstNumberArray = inputArray.slice(0, operatorIndex);
             // assigning top operator variable here
             firstNumber = parseFloat(firstNumberArray.join(''));
 
-            // Slice the inputArray to get first number array
             secondNumberArray = inputArray.slice(operatorIndex + 1);
-            // assigning top operator variable here
             secondNumber = parseFloat(secondNumberArray.join(''));
         }
 }
@@ -155,19 +156,21 @@ function cleanInput() {
 function calcResult(keyChoice) {
     if (keyChoice === '=') {
         if (firstNumber !== undefined && 
+            !isNaN(firstNumber) &&
             secondNumber !== undefined && 
+            !isNaN(secondNumber) &&
             operator !== undefined)
         {
             let result = operate(operator, firstNumber, secondNumber);
             storeResult = result;
             updateDisplay([result]);
 
-            // Reset inputArray to start fresh with the result
+            // reset inputArray to start fresh with the result
             inputArray = [result.toString()];
             firstNumber = result;
             secondNumber = undefined;
             operator = undefined;
-
+            resultCalculated = true;
         } else {
             clearCalc();
         }
@@ -176,11 +179,12 @@ function calcResult(keyChoice) {
 
 // clear display, variables, and arrays
 function clearCalc() {
-            firstNumber = undefined;
+            firstNumber = 0;
             secondNumber = undefined;
             operator = undefined;
             inputArray = [];
             storeResult = null;
+            resultCalculated = false;
             updateDisplay([0]);
 } 
 
