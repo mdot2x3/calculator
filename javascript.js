@@ -1,27 +1,30 @@
 // calculation functions
-function add(a, b){
+function add(a, b) {
     return a + b;
 };
 
-function subtract(a, b){
+function subtract(a, b) {
     return a - b;
 };
 
-function multiply(a, b){
+function multiply(a, b) {
     return a * b;
 };
 
-function divide(a, b){
+function divide(a, b) {
     return a / b;
+};
+
+function percent(a) {
+    return a * 0.01;
 };
 
 // array and variables to store user selection
 let inputArray = [];
-let firstNumber;
-let secondNumber;
-let operator;
+let firstNumber = null;
+let secondNumber = null;
+let operator = null;
 let storeResult = null;
-let resultCalculated = false;
 
 // function to combine input with calc function
 function operate(operator, firstNumber, secondNumber) {
@@ -38,33 +41,9 @@ function operate(operator, firstNumber, secondNumber) {
         case '/':
             return divide(firstNumber, secondNumber);
             break;
-    }
-}
-
-// create calculator input buttons within grid
-let makeArray = [];
-function makeKey() {
-    let idTag = 0;
-    let keySymbol = ['1', '2', '3', '+', '4', '5', '6', '-', '7', '8', '9', '*', '0', 'clear', '=', '/'];
-
-    for (let i = 0; i < keySymbol.length; i++) {
-        const keyButton = document.createElement('div');
-        keyButton.classList.add('key');
-        idTag += 1;
-        keyButton.setAttribute('id', idTag);
-
-        // assign key symbols from array
-        keyButton.textContent = keySymbol[i];
-
-        makeArray.push(keyButton);
-    }
-}
-
-// print calculator input buttons within grid
-function printKey() {
-    for (let i = 0; i < makeArray.length; i++) {
-        const keySet = document.querySelector('.calc-container');
-        keySet.appendChild(makeArray[i]);
+        case '%':
+            return percent(firstNumber);
+            break;
     }
 }
 
@@ -83,39 +62,42 @@ function selectKey() {
         if (e.target.classList.contains('key')) {
         const keyChoice = e.target.textContent;
 
-            // prevent entering multiple operators in sequence
-            if (['+', '-', '*', '/'].includes(keyChoice) && operator !== undefined) {
-                return;
-            }
-
-            if (keyChoice === 'clear') {
+            if (keyChoice === 'AC') {
                 clearCalc();
                 return;
             }
 
+            if (keyChoice === 'DEL') {
+                inputArray.pop();
+                updateDisplay(inputArray);
+                return;
+            }
+
             if (!isNaN(keyChoice) || keyChoice === '.') {
-                // clear input array if a result was just calculated
-                if (resultCalculated) {
-                    inputArray = [];
-                    resultCalculated = false;
-                }
                 inputArray.push(keyChoice);
                 updateDisplay(inputArray);
-            } else if (['+', '-', '*', '/'].includes(keyChoice)) {
-                // use the result as the first number if continuing operations
-                if (resultCalculated) {
-                    firstNumber = storeResult;
-                    resultCalculated = false;
+            }
+            
+            if (['+', '-', '*', '/'].includes(keyChoice)) {
+                if (operator === null) {
+                    // assign firstNumber and operator
+                    inputArray.push(keyChoice);
+                    cleanInput();
+                    updateDisplay(inputArray);
+                } else {
+                    cleanInput();
+                    calcResult();
+                    inputArray.push(keyChoice);
+                    updateDisplay(inputArray);
+                    cleanInput();
                 }
-                // assign firstNumber and operator
-                cleanInput();
-                operator = keyChoice;
-                inputArray.push(keyChoice);
-                updateDisplay(inputArray);
-            } else if (keyChoice === '=') {
+            
+            }
+            
+            if (keyChoice === '=') {
                 // assign secondNumber
                 cleanInput();
-                calcResult(keyChoice);
+                calcResult();
             }
         }
     });
@@ -130,11 +112,7 @@ function cleanInput() {
 
     // find the first occurrence of an operator
     for (let i = 0; i < inputArray.length; i++) {
-        if (inputArray[i] === '+' || 
-            inputArray[i] === '-' ||
-            inputArray[i] === '*' ||
-            inputArray[i] === '/') 
-        {
+        if (['+', '-', '*', '/'].includes(inputArray[i])) {
             operatorIndex = i;
             // assigning top operator variable here
             operator = inputArray[i];
@@ -153,48 +131,30 @@ function cleanInput() {
 }
 
 // calculate and display result
-function calcResult(keyChoice) {
-    if (keyChoice === '=') {
-        if (firstNumber !== undefined && 
-            !isNaN(firstNumber) &&
-            secondNumber !== undefined && 
-            !isNaN(secondNumber) &&
-            operator !== undefined)
-        {
-            let result = operate(operator, firstNumber, secondNumber);
-            storeResult = result;
-            updateDisplay([result]);
+function calcResult() {
+    let result = operate(operator, firstNumber, secondNumber);
+    storeResult = result;
+    updateDisplay([result]);
 
-            // reset inputArray to start fresh with the result
-            inputArray = [result.toString()];
-            firstNumber = result;
-            secondNumber = undefined;
-            operator = undefined;
-            resultCalculated = true;
-        } else {
-            clearCalc();
-        }
-    }
+    inputArray = [result];
+    firstNumber = null;
+    secondNumber = null;
+    operator = null;
 }
 
 // clear display, variables, and arrays
 function clearCalc() {
-            firstNumber = 0;
-            secondNumber = undefined;
-            operator = undefined;
-            inputArray = [];
-            storeResult = null;
-            resultCalculated = false;
-            updateDisplay([0]);
+    inputArray = [];
+    firstNumber = null;
+    secondNumber = null;
+    operator = null;
+    storeResult = null;
+    updateDisplay([0]);
 } 
 
 
-
-/////////////
-// generate calculator app
+/////////////// generate calculator app
 function runApp() {
-makeKey();
-printKey();
 selectKey();
 }
 
