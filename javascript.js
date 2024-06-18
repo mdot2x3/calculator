@@ -78,20 +78,24 @@ function selectKey() {
                 updateDisplay(inputArray);
             }
             
-            if (['+', '-', '*', '/'].includes(keyChoice)) {
+            if (['+', '-', '*', '/', '%'].includes(keyChoice)) {
                 if (operator === null) {
                     // assign firstNumber and operator
                     inputArray.push(keyChoice);
                     cleanInput();
                     updateDisplay(inputArray);
                 } else {
+                    if (keyChoice === '%') {
+                        cleanInput();
+                        calcResult();
+                    }
+                    // assign secondNumber
                     cleanInput();
                     calcResult();
                     inputArray.push(keyChoice);
                     updateDisplay(inputArray);
                     cleanInput();
                 }
-            
             }
             
             if (keyChoice === '=') {
@@ -112,7 +116,7 @@ function cleanInput() {
 
     // find the first occurrence of an operator
     for (let i = 0; i < inputArray.length; i++) {
-        if (['+', '-', '*', '/'].includes(inputArray[i])) {
+        if (['+', '-', '*', '/', '%'].includes(inputArray[i])) {
             operatorIndex = i;
             // assigning top operator variable here
             operator = inputArray[i];
