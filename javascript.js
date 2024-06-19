@@ -86,15 +86,15 @@ function selectKey() {
                     updateDisplay(inputArray);
                 } else {
                     if (keyChoice === '%') {
-                        cleanInput();
+                        //cleanInput();
                         calcResult();
                     } else {
                         // assign secondNumber
-                    cleanInput();
-                    calcResult();
-                    inputArray.push(keyChoice);
-                    updateDisplay(inputArray);
-                    cleanInput();
+                        cleanInput();
+                        calcResult();
+                        inputArray.push(keyChoice);
+                        updateDisplay(inputArray);
+                        //cleanInput();
                     }
                 }
             }
@@ -139,7 +139,14 @@ function cleanInput() {
             firstNumber = parseFloat(firstNumberArray.join(''));
 
             secondNumberArray = inputArray.slice(operatorIndex + 1);
+            console.log(secondNumberArray);
+            if (secondNumberArray.includes('%')) {
+                secondNumberArray.pop();
+                secondNumber = parseFloat(secondNumberArray.join('')) * 0.01;
+            } else {
             secondNumber = parseFloat(secondNumberArray.join(''));
+            console.log(secondNumber);
+            }
         }
 }
 
