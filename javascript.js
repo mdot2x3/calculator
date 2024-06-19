@@ -88,20 +88,25 @@ function selectKey() {
                     if (keyChoice === '%') {
                         cleanInput();
                         calcResult();
-                    }
-                    // assign secondNumber
+                    } else {
+                        // assign secondNumber
                     cleanInput();
                     calcResult();
                     inputArray.push(keyChoice);
                     updateDisplay(inputArray);
                     cleanInput();
+                    }
                 }
             }
             
             if (keyChoice === '=') {
                 // assign secondNumber
                 cleanInput();
-                calcResult();
+                if (secondNumber === null || operator === null) {
+                    clearCalc();
+                } else {
+                    calcResult();
+                }
             }
         }
     });
@@ -124,6 +129,10 @@ function cleanInput() {
         }
     }
         if (operatorIndex != -1) {
+            // default to 0 as first term when using operator keys without adding values first
+            if (operatorIndex == 0) {
+                inputArray.unshift('0');
+            }
             // slice the inputArray to get first number array
             firstNumberArray = inputArray.slice(0, operatorIndex);
             // assigning top operator variable here
