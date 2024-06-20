@@ -86,8 +86,11 @@ function selectKey() {
                     updateDisplay(inputArray);
                 } else {
                     if (keyChoice === '%') {
+                        inputArray.push(keyChoice);
+                        cleanInput();
+                        updateDisplay(inputArray);
                         //cleanInput();
-                        calcResult();
+                        //calcResult();
                     } else {
                         // assign secondNumber
                         cleanInput();
