@@ -89,15 +89,14 @@ function selectKey() {
                         inputArray.push(keyChoice);
                         cleanInput();
                         updateDisplay(inputArray);
-                        //cleanInput();
-                        //calcResult();
                     } else {
                         // assign secondNumber
                         cleanInput();
                         calcResult();
                         inputArray.push(keyChoice);
                         updateDisplay(inputArray);
-                        //cleanInput();
+                        // sets result and operator to top variables, awaits next value to calc against
+                        cleanInput();
                     }
                 }
             }
@@ -105,8 +104,9 @@ function selectKey() {
             if (keyChoice === '=') {
                 // assign secondNumber
                 cleanInput();
+                // nothing happens when = key clicked without other values set
                 if (secondNumber === null || operator === null) {
-                    clearCalc();
+                    return;
                 } else {
                     calcResult();
                 }
@@ -142,13 +142,12 @@ function cleanInput() {
             firstNumber = parseFloat(firstNumberArray.join(''));
 
             secondNumberArray = inputArray.slice(operatorIndex + 1);
-            console.log(secondNumberArray);
+            // check if second array contains % and if so, convert it first before assignment to secondNumber
             if (secondNumberArray.includes('%')) {
                 secondNumberArray.pop();
                 secondNumber = parseFloat(secondNumberArray.join('')) * 0.01;
             } else {
             secondNumber = parseFloat(secondNumberArray.join(''));
-            console.log(secondNumber);
             }
         }
 }
