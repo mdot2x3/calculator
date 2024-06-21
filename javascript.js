@@ -73,6 +73,31 @@ function selectKey() {
                 return;
             }
 
+            if (keyChoice === '+/-') {
+                cleanInput();
+                // assign front end '-'
+                if (operator === null) {
+                    if (!isNaN(inputArray[0]) || inputArray[0] === '.') {
+                        // check for positive value and insert -
+                        if (inputArray[0] > 0 || inputArray[0] === '.') {
+                            inputArray.unshift('-');
+                        // else negative value (therefore already calculated as an integer)
+                        } else {
+                            inputArray[0] *= -1;
+                        }
+                    // for cases when initial value is not a number or a period, aka '-'
+                    } else {
+                        inputArray.shift();
+                    }
+                    updateDisplay(inputArray);
+                // assign back end '-'
+                } else {
+                secondNumber * -1;
+                updateDisplay(inputArray);
+                }
+                return;
+            }
+
             if (!isNaN(keyChoice) || keyChoice === '.') {
                 inputArray.push(keyChoice);
                 updateDisplay(inputArray);
@@ -126,14 +151,20 @@ function cleanInput() {
     for (let i = 0; i < inputArray.length; i++) {
         if (['+', '-', '*', '/', '%'].includes(inputArray[i])) {
             operatorIndex = i;
-            // assigning top operator variable here
-            operator = inputArray[i];
-            break;
+            // make sure operator in position one (+/-) isn't assigned as calculation operator
+            if (operatorIndex == 0) {
+                continue;
+            } else {
+                // assigning top operator variable here
+                operator = inputArray[i];
+                break;
+            }
+            
         }
     }
         if (operatorIndex != -1) {
             // default to 0 as first term when using operator keys without adding values first
-            if (operatorIndex == 0) {
+            if (operatorIndex == 0 && inputArray.length == 1) {
                 inputArray.unshift('0');
             }
             // slice the inputArray to get first number array
