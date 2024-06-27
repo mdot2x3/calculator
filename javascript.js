@@ -78,7 +78,7 @@ function selectKey() {
                 // assign front end '-'
                 if (operator === null) {
                     if (!isNaN(inputArray[0]) || inputArray[0] === '.') {
-                        // check for positive value and insert -
+                        // check for positive value and insert '-'
                         if (inputArray[0] > 0 || inputArray[0] === '.') {
                             inputArray.unshift('-');
                         // else negative value (therefore already calculated as an integer)
@@ -92,8 +92,36 @@ function selectKey() {
                     updateDisplay(inputArray);
                 // assign back end '-'
                 } else {
-                secondNumber * -1;
-                updateDisplay(inputArray);
+                    if (operator === '+') {
+                        // find index and replace operator value
+                        let plus = inputArray.indexOf('+');
+                        inputArray.splice(plus, 1, '-');
+                    } else if (operator === '-'){
+                        // need to find lastIndexOf here to avoid catching front side negatives
+                        let minus = inputArray.lastIndexOf('-');
+                        inputArray.splice(minus, 1, '+');
+                    } else if (operator === '/') {
+                        let divi = inputArray.indexOf('/');
+                            // check if negative exists, if not, insert a '-' after the operator
+                            if (inputArray[divi + 1] !== '-') {
+                                inputArray.splice(divi + 1, 0, '-');
+                            } else {
+                                // else remove the '-' using lastIndexOf
+                                let diviMinus = inputArray.lastIndexOf('-');
+                                inputArray.splice(diviMinus, 1);
+                            }
+                    } else if (operator === '*') {
+                        let multi = inputArray.indexOf('*');
+                            if (inputArray[multi + 1] !== '-') {
+                                inputArray.splice(multi + 1, 0, '-');
+                            } else {
+                                // else remove the '-' using lastIndexOf
+                                let multiMinus = inputArray.lastIndexOf('-');
+                                inputArray.splice(multiMinus, 1);
+                            }
+                    }
+                    cleanInput();
+                    updateDisplay(inputArray);
                 }
                 return;
             }
