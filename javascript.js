@@ -74,6 +74,10 @@ function selectKey() {
             }
 
             if (keyChoice === '+/-') {
+                // prevent blank display when hitting key on startup or after pressing AC
+                if (inputArray.length === 0) {
+                    return;
+                }
                 cleanInput();
                 // assign front end '-'
                 if (operator === null) {
