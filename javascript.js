@@ -68,14 +68,28 @@ function selectKey() {
             }
 
             if (keyChoice === 'DEL') {
-                // prevent blank display when deleting all numbers
-                if (inputArray.length > 1) {
-                    inputArray.pop();
-                    updateDisplay(inputArray);
-                } else if (inputArray.length <= 1) {
-                    clearCalc();
+                // if operator unassigned proceed as usual
+                if (operator === null) {
+                    // prevent blank display when deleting all numbers
+                    if (inputArray.length > 1) {
+                        inputArray.pop();
+                        updateDisplay(inputArray);
+                    } else if (inputArray.length <= 1) {
+                        clearCalc();
+                    }
+                    return;
+                    // else allow deleted operators to be reassigned
+                } else {
+                    operator = null;
+                    // prevent blank display when deleting all numbers
+                    if (inputArray.length > 1) {
+                        inputArray.pop();
+                        updateDisplay(inputArray);
+                    } else if (inputArray.length <= 1) {
+                        clearCalc();
+                    }
+                    return;
                 }
-                return;
             }
 
             if (keyChoice === '+/-') {
