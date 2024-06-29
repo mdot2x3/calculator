@@ -68,8 +68,13 @@ function selectKey() {
             }
 
             if (keyChoice === 'DEL') {
-                inputArray.pop();
-                updateDisplay(inputArray);
+                // prevent blank display when deleting all numbers
+                if (inputArray.length > 1) {
+                    inputArray.pop();
+                    updateDisplay(inputArray);
+                } else if (inputArray.length <= 1) {
+                    clearCalc();
+                }
                 return;
             }
 
