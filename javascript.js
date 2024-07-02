@@ -150,6 +150,26 @@ function selectKey() {
             }
 
             if (!isNaN(keyChoice) || keyChoice === '.') {
+                // prevent multiple decimal points per number on each side of the operator
+                if (keyChoice === '.') {
+                    // prevent for first segment
+                    if (operator === null) {
+                        // check first segment for leading '-' possibly added by user with '+/-'
+                        let firstSegment = (inputArray[0] === '-' ? inputArray.slice(1) : inputArray);
+                        if (firstSegment.includes('.') || 
+                        (storeResult !== null && inputArray.length === 1 && 
+                        firstSegment[0].toString().includes('.'))) {
+                            return;
+                        }
+                        // prevent for second segment
+                    } else {
+                            let segmentOperatorIndex = inputArray.indexOf(operator);
+                            let secondSegment = inputArray.slice(segmentOperatorIndex + 1);
+                            if (secondSegment.includes('.')) {
+                                return;
+                            }
+                    }
+                }
                 inputArray.push(keyChoice);
                 updateDisplay(inputArray);
             }
@@ -210,7 +230,6 @@ function cleanInput() {
                 operator = inputArray[i];
                 break;
             }
-            
         }
     }
         if (operatorIndex != -1) {
