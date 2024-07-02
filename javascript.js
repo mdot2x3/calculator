@@ -237,6 +237,17 @@ function cleanInput() {
 // calculate and display result
 function calcResult() {
     let result = operate(operator, firstNumber, secondNumber);
+    // check if decimal exists
+    if (result - Math.floor(result) !== 0) {
+        // find decimal length
+        let decimalIndex = result.toString().indexOf('.');
+        let decimalLength = decimalIndex >= 0 ? result.toString().length - decimalIndex - 1 : 0;
+        // only truncate decimals greater than 9 characters,
+        // prevents all decimals from being assigned 9 digits regardless of length
+        if (decimalLength > 9)
+            // multiply by 1 to easily remove any trailing zeros from certain calculations
+            result = result.toFixed(9) * 1;
+    }
     storeResult = result;
     updateDisplay([result]);
 
