@@ -83,8 +83,9 @@ function selectKey() {
                     // prevent blank display when deleting all numbers
                     if (inputArray.length > 1) {
                         let popValue = inputArray.pop();
+                        console.log(popValue);
                         updateDisplay(inputArray);
-                        if (popValue.includes('+', '-', '*', '/')) {
+                        if (['+', '-', '*', '/'].includes(popValue)) {
                             operator = null;
                         }
                     } else {
