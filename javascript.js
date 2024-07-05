@@ -74,18 +74,20 @@ function selectKey() {
                     if (inputArray.length > 1) {
                         inputArray.pop();
                         updateDisplay(inputArray);
-                    } else if (inputArray.length <= 1) {
+                    } else {
                         clearCalc();
                     }
                     return;
                     // else allow deleted operators to be reassigned
                 } else {
-                    operator = null;
                     // prevent blank display when deleting all numbers
                     if (inputArray.length > 1) {
-                        inputArray.pop();
+                        let popValue = inputArray.pop();
                         updateDisplay(inputArray);
-                    } else if (inputArray.length <= 1) {
+                        if (popValue.includes('+', '-', '*', '/')) {
+                            operator = null;
+                        }
+                    } else {
                         clearCalc();
                     }
                     return;
@@ -157,7 +159,7 @@ function selectKey() {
                         // check first segment for leading '-' possibly added by user with '+/-'
                         let firstSegment = (inputArray[0] === '-' ? inputArray.slice(1) : inputArray);
                         if (firstSegment.includes('.') || 
-                        (storeResult !== null && inputArray.length === 1 && 
+                        (storeResult !== null && //inputArray.length === 1 && //
                         firstSegment[0].toString().includes('.'))) {
                             return;
                         }
