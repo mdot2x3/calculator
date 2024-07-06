@@ -83,7 +83,6 @@ function selectKey() {
                     // prevent blank display when deleting all numbers
                     if (inputArray.length > 1) {
                         let popValue = inputArray.pop();
-                        console.log(popValue);
                         updateDisplay(inputArray);
                         if (['+', '-', '*', '/'].includes(popValue)) {
                             operator = null;
@@ -159,9 +158,7 @@ function selectKey() {
                     if (operator === null) {
                         // check first segment for leading '-' possibly added by user with '+/-'
                         let firstSegment = (inputArray[0] === '-' ? inputArray.slice(1) : inputArray);
-                        if (firstSegment.includes('.') || 
-                        (storeResult !== null && //inputArray.length === 1 && //
-                        firstSegment[0].toString().includes('.'))) {
+                        if (firstSegment.includes('.') || (storeResult !== null && firstSegment[0].toString().includes('.'))) {
                             return;
                         }
                         // prevent for second segment
@@ -178,25 +175,31 @@ function selectKey() {
             }
             
             if (['+', '-', '*', '/', '%'].includes(keyChoice)) {
-                if (operator === null) {
-                    // assign firstNumber and operator
-                    inputArray.push(keyChoice);
-                    cleanInput();
-                    updateDisplay(inputArray);
-                } else {
-                    if (keyChoice === '%') {
+                // prevent input of multiple operators back to back resulting in NaN
+                if (!['+', '-', '*', '/'].includes(inputArray[inputArray.length-1])) {
+                    if (operator === null) {
+                        // assign firstNumber and operator
                         inputArray.push(keyChoice);
                         cleanInput();
                         updateDisplay(inputArray);
                     } else {
-                        // assign secondNumber
-                        cleanInput();
-                        calcResult();
-                        inputArray.push(keyChoice);
-                        updateDisplay(inputArray);
-                        // sets result and operator to top variables, awaits next value to calc against
-                        cleanInput();
+                        // prevents input of multiple '%' but result is slightly different (cumulative)
+                        if (keyChoice === '%' && !['%'].includes(inputArray[inputArray.length-1])) {
+                            inputArray.push(keyChoice);
+                            cleanInput();
+                            updateDisplay(inputArray);
+                        } else {
+                            // assign secondNumber
+                            cleanInput();
+                            calcResult();
+                            inputArray.push(keyChoice);
+                            updateDisplay(inputArray);
+                            // sets result and operator to top variables, awaits next value to calc against
+                            cleanInput();
+                        }
                     }
+                } else {
+                    return;
                 }
             }
             
