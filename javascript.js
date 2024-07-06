@@ -50,7 +50,6 @@ function operate(operator, firstNumber, secondNumber) {
 // populate the display
 function updateDisplay(input) {
     const display = document.querySelector('.display');
-    
     // stitch together array values
     display.textContent = input.join('');
 }
@@ -274,7 +273,13 @@ function calcResult() {
             result = result.toFixed(9) * 1;
     }
     storeResult = result;
-    updateDisplay([result]);
+    // update display with result
+    // snarky message if user attempts to divide by 0
+    if (result == Infinity) {
+        updateDisplay(["Nice Try -> /0"])
+    } else {
+        updateDisplay([result]);
+    }
 
     inputArray = [result];
     firstNumber = null;
