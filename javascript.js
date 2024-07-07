@@ -83,7 +83,7 @@ function selectKey() {
                     if (inputArray.length > 1) {
                         let popValue = inputArray.pop();
                         updateDisplay(inputArray);
-                        if (['+', '-', '*', '/'].includes(popValue)) {
+                        if (['+', '-', '*', '/', '%'].includes(popValue)) {
                             operator = null;
                         }
                     } else {
@@ -125,14 +125,14 @@ function selectKey() {
                         let minus = inputArray.lastIndexOf('-');
                         inputArray.splice(minus, 1, '+');
                     } else if (operator === '/') {
-                        let divi = inputArray.indexOf('/');
+                        let division = inputArray.indexOf('/');
                             // check if negative exists, if not, insert a '-' after the operator
-                            if (inputArray[divi + 1] !== '-') {
-                                inputArray.splice(divi + 1, 0, '-');
+                            if (inputArray[division + 1] !== '-') {
+                                inputArray.splice(division + 1, 0, '-');
                             } else {
                                 // else remove the '-' using lastIndexOf
-                                let diviMinus = inputArray.lastIndexOf('-');
-                                inputArray.splice(diviMinus, 1);
+                                let divisionMinus = inputArray.lastIndexOf('-');
+                                inputArray.splice(divisionMinus, 1);
                             }
                     } else if (operator === '*') {
                         let multi = inputArray.indexOf('*');
@@ -205,8 +205,12 @@ function selectKey() {
             if (keyChoice === '=') {
                 // assign secondNumber
                 cleanInput();
+                // special exception - allow calculation of '%' without other values set, as per below
+                if (operator === '%') {
+                    calcResult();
+                }
                 // nothing happens when = key clicked without other values set
-                if (secondNumber === null || operator === null) {
+                if (secondNumber === null || isNaN(secondNumber) || operator === null) {
                     return;
                 } else {
                     calcResult();
