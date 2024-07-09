@@ -100,7 +100,7 @@ function selectKey() {
                 }
                 cleanInput();
                 // assign front end '-'
-                if (operator === null) {
+                if (operator === null || operator === '%') {
                     if (!isNaN(inputArray[0]) || inputArray[0] === '.') {
                         // check for positive value and insert '-'
                         if (inputArray[0] > 0 || inputArray[0] === '.') {
@@ -161,6 +161,9 @@ function selectKey() {
                             return;
                         }
                         // prevent for second segment
+                      // prevent decimal points after '%' sign
+                    } else if (inputArray.includes('%')) {
+                        return;
                     } else {
                             let segmentOperatorIndex = inputArray.indexOf(operator);
                             let secondSegment = inputArray.slice(segmentOperatorIndex + 1);
@@ -168,6 +171,10 @@ function selectKey() {
                                 return;
                             }
                     }
+                }
+                // prevent additional number value input after '%' sign
+                if (inputArray.includes('%')) {
+                    return;
                 }
                 inputArray.push(keyChoice);
                 updateDisplay(inputArray);
