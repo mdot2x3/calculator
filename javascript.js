@@ -54,177 +54,196 @@ function updateDisplay(input) {
     display.textContent = input.join('');
 }
 
-// event handler for key click
+// event handlers for key click or keyboard
 function selectKey() {
+    // key click handler
     const keys = document.querySelector('.calc-container');
     keys.addEventListener('click', (e) => {
         if (e.target.classList.contains('key')) {
-        const keyChoice = e.target.textContent;
-
-            if (keyChoice === 'AC') {
-                clearCalc();
-                return;
-            }
-
-            if (keyChoice === 'DEL') {
-                // if operator unassigned proceed as usual
-                if (operator === null) {
-                    // prevent blank display when deleting all numbers
-                    if (inputArray.length > 1) {
-                        inputArray.pop();
-                        updateDisplay(inputArray);
-                    } else {
-                        clearCalc();
-                    }
-                    return;
-                    // else allow deleted operators to be reassigned
-                } else {
-                    // prevent blank display when deleting all numbers
-                    if (inputArray.length > 1) {
-                        let popValue = inputArray.pop();
-                        updateDisplay(inputArray);
-                        if (['+', '-', '*', '/', '%'].includes(popValue)) {
-                            operator = null;
-                        }
-                    } else {
-                        clearCalc();
-                    }
-                    return;
-                }
-            }
-
-            if (keyChoice === '+/-') {
-                // prevent blank display when hitting key on startup or after pressing AC
-                if (inputArray.length === 0) {
-                    return;
-                }
-                cleanInput();
-                // assign front end '-'
-                if (operator === null || operator === '%') {
-                    if (!isNaN(inputArray[0]) || inputArray[0] === '.') {
-                        // check for positive value and insert '-'
-                        if (inputArray[0] > 0 || inputArray[0] === '.') {
-                            inputArray.unshift('-');
-                        // else negative value (therefore already calculated as an integer)
-                        } else {
-                            inputArray[0] *= -1;
-                        }
-                    // for cases when initial value is not a number or a period, aka '-'
-                    } else {
-                        inputArray.shift();
-                    }
-                    updateDisplay(inputArray);
-                // assign back end '-'
-                } else {
-                    if (operator === '+') {
-                        // find index and replace operator value
-                        let plus = inputArray.indexOf('+');
-                        inputArray.splice(plus, 1, '-');
-                    } else if (operator === '-'){
-                        // need to find lastIndexOf here to avoid catching front side negatives
-                        let minus = inputArray.lastIndexOf('-');
-                        inputArray.splice(minus, 1, '+');
-                    } else if (operator === '/') {
-                        let division = inputArray.indexOf('/');
-                            // check if negative exists, if not, insert a '-' after the operator
-                            if (inputArray[division + 1] !== '-') {
-                                inputArray.splice(division + 1, 0, '-');
-                            } else {
-                                // else remove the '-' using lastIndexOf
-                                let divisionMinus = inputArray.lastIndexOf('-');
-                                inputArray.splice(divisionMinus, 1);
-                            }
-                    } else if (operator === '*') {
-                        let multi = inputArray.indexOf('*');
-                            if (inputArray[multi + 1] !== '-') {
-                                inputArray.splice(multi + 1, 0, '-');
-                            } else {
-                                // else remove the '-' using lastIndexOf
-                                let multiMinus = inputArray.lastIndexOf('-');
-                                inputArray.splice(multiMinus, 1);
-                            }
-                    }
-                    cleanInput();
-                    updateDisplay(inputArray);
-                }
-                return;
-            }
-
-            if (!isNaN(keyChoice) || keyChoice === '.') {
-                // prevent multiple decimal points per number on each side of the operator
-                if (keyChoice === '.') {
-                    // prevent for first segment
-                    if (operator === null) {
-                        // check first segment for leading '-' possibly added by user with '+/-'
-                        let firstSegment = (inputArray[0] === '-' ? inputArray.slice(1) : inputArray);
-                        if (firstSegment.includes('.') || (storeResult !== null && firstSegment[0].toString().includes('.'))) {
-                            return;
-                        }
-                        // prevent for second segment
-                      // prevent decimal points after '%' sign
-                    } else if (inputArray.includes('%')) {
-                        return;
-                    } else {
-                            let segmentOperatorIndex = inputArray.indexOf(operator);
-                            let secondSegment = inputArray.slice(segmentOperatorIndex + 1);
-                            if (secondSegment.includes('.')) {
-                                return;
-                            }
-                    }
-                }
-                // prevent additional number value input after '%' sign
-                if (inputArray.includes('%')) {
-                    return;
-                }
-                inputArray.push(keyChoice);
-                updateDisplay(inputArray);
-            }
-            
-            if (['+', '-', '*', '/', '%'].includes(keyChoice)) {
-                // prevent input of multiple operators back to back resulting in NaN
-                if (!['+', '-', '*', '/'].includes(inputArray[inputArray.length-1])) {
-                    if (operator === null) {
-                        // assign firstNumber and operator
-                        inputArray.push(keyChoice);
-                        cleanInput();
-                        updateDisplay(inputArray);
-                    } else {
-                        // prevents input of multiple '%' but result is slightly different (cumulative)
-                        if (keyChoice === '%' && !['%'].includes(inputArray[inputArray.length-1])) {
-                            inputArray.push(keyChoice);
-                            cleanInput();
-                            updateDisplay(inputArray);
-                        } else {
-                            // assign secondNumber
-                            cleanInput();
-                            calcResult();
-                            inputArray.push(keyChoice);
-                            updateDisplay(inputArray);
-                            // sets result and operator to top variables, awaits next value to calc against
-                            cleanInput();
-                        }
-                    }
-                } else {
-                    return;
-                }
-            }
-            
-            if (keyChoice === '=') {
-                // assign secondNumber
-                cleanInput();
-                // special exception - allow calculation of '%' without other values set, as per below
-                if (operator === '%') {
-                    calcResult();
-                }
-                // nothing happens when = key clicked without other values set
-                if (secondNumber === null || isNaN(secondNumber) || operator === null) {
-                    return;
-                } else {
-                    calcResult();
-                }
-            }
+        let keyChoice = e.target.textContent;
+        handleKeyInput(keyChoice);
         }
     });
+    // keyboard handler
+    document.addEventListener('keydown', (e) => {
+        let keyChoice = e.key;
+        if (keyChoice === 'Enter') {
+            keyChoice = '=';
+        }
+        if (keyChoice === 'Backspace') {
+            keyChoice = 'DEL';
+        }
+        if (keyChoice === 'Escape') {
+            keyChoice = 'AC';
+        }
+        handleKeyInput(keyChoice);
+    });
+}
+
+// function to handle keyChoice input from either click or keyboard event handlers
+function handleKeyInput(keyChoice) {
+    if (keyChoice === 'AC') {
+        clearCalc();
+        return;
+    }
+
+    if (keyChoice === 'DEL') {
+        // if operator unassigned proceed as usual
+        if (operator === null) {
+            // prevent blank display when deleting all numbers
+            if (inputArray.length > 1) {
+                inputArray.pop();
+                updateDisplay(inputArray);
+            } else {
+                clearCalc();
+            }
+            return;
+            // else allow deleted operators to be reassigned
+        } else {
+            // prevent blank display when deleting all numbers
+            if (inputArray.length > 1) {
+                let popValue = inputArray.pop();
+                updateDisplay(inputArray);
+                if (['+', '-', '*', '/', '%'].includes(popValue)) {
+                    operator = null;
+                }
+            } else {
+                clearCalc();
+            }
+            return;
+        }
+    }
+
+    if (keyChoice === '+/-') {
+        // prevent blank display when hitting key on startup or after pressing AC
+        if (inputArray.length === 0) {
+            return;
+        }
+        cleanInput();
+        // assign front end '-'
+        if (operator === null || operator === '%') {
+            if (!isNaN(inputArray[0]) || inputArray[0] === '.') {
+                // check for positive value and insert '-'
+                if (inputArray[0] > 0 || inputArray[0] === '.') {
+                    inputArray.unshift('-');
+                // else negative value (therefore already calculated as an integer)
+                } else {
+                    inputArray[0] *= -1;
+                }
+            // for cases when initial value is not a number or a period, aka '-'
+            } else {
+                inputArray.shift();
+            }
+            updateDisplay(inputArray);
+        // assign back end '-'
+        } else {
+            if (operator === '+') {
+                // find index and replace operator value
+                let plus = inputArray.indexOf('+');
+                inputArray.splice(plus, 1, '-');
+            } else if (operator === '-'){
+                // need to find lastIndexOf here to avoid catching front side negatives
+                let minus = inputArray.lastIndexOf('-');
+                inputArray.splice(minus, 1, '+');
+            } else if (operator === '/') {
+                let division = inputArray.indexOf('/');
+                    // check if negative exists, if not, insert a '-' after the operator
+                    if (inputArray[division + 1] !== '-') {
+                        inputArray.splice(division + 1, 0, '-');
+                    } else {
+                        // else remove the '-' using lastIndexOf
+                        let divisionMinus = inputArray.lastIndexOf('-');
+                        inputArray.splice(divisionMinus, 1);
+                    }
+            } else if (operator === '*') {
+                let multi = inputArray.indexOf('*');
+                    if (inputArray[multi + 1] !== '-') {
+                        inputArray.splice(multi + 1, 0, '-');
+                    } else {
+                        // else remove the '-' using lastIndexOf
+                        let multiMinus = inputArray.lastIndexOf('-');
+                        inputArray.splice(multiMinus, 1);
+                    }
+            }
+            cleanInput();
+            updateDisplay(inputArray);
+        }
+        return;
+    }
+
+    if (!isNaN(keyChoice) || keyChoice === '.') {
+        // prevent multiple decimal points per number on each side of the operator
+        if (keyChoice === '.') {
+            // prevent for first segment
+            if (operator === null) {
+                // check first segment for leading '-' possibly added by user with '+/-'
+                let firstSegment = (inputArray[0] === '-' ? inputArray.slice(1) : inputArray);
+                if (firstSegment.includes('.') || (storeResult !== null && firstSegment[0].toString().includes('.'))) {
+                    return;
+                }
+                // prevent for second segment
+              // prevent decimal points after '%' sign
+            } else if (inputArray.includes('%')) {
+                return;
+            } else {
+                    let segmentOperatorIndex = inputArray.indexOf(operator);
+                    let secondSegment = inputArray.slice(segmentOperatorIndex + 1);
+                    if (secondSegment.includes('.')) {
+                        return;
+                    }
+            }
+        }
+        // prevent additional number value input after '%' sign
+        if (inputArray.includes('%')) {
+            return;
+        }
+        inputArray.push(keyChoice);
+        updateDisplay(inputArray);
+    }
+    
+    if (['+', '-', '*', '/', '%'].includes(keyChoice)) {
+        // prevent input of multiple operators back to back resulting in NaN
+        if (!['+', '-', '*', '/'].includes(inputArray[inputArray.length-1])) {
+            if (operator === null) {
+                // assign firstNumber and operator
+                inputArray.push(keyChoice);
+                cleanInput();
+                updateDisplay(inputArray);
+            } else {
+                // prevents input of multiple '%' but result is slightly different (cumulative)
+                if (keyChoice === '%' && !['%'].includes(inputArray[inputArray.length-1])) {
+                    inputArray.push(keyChoice);
+                    cleanInput();
+                    updateDisplay(inputArray);
+                } else {
+                    // assign secondNumber
+                    cleanInput();
+                    calcResult();
+                    inputArray.push(keyChoice);
+                    updateDisplay(inputArray);
+                    // sets result and operator to top variables, awaits next value to calc against
+                    cleanInput();
+                }
+            }
+        } else {
+            return;
+        }
+    }
+    
+    if (keyChoice === '=') {
+        // assign secondNumber
+        cleanInput();
+        // special exception - allow calculation of '%' without other values set, as per below
+        if (operator === '%') {
+            calcResult();
+        }
+        // nothing happens when = key clicked without other values set
+        if (secondNumber === null || isNaN(secondNumber) || operator === null) {
+            return;
+        } else {
+            calcResult();
+        }
+    }
 }
 
 // split inputArray into separate arrays before after operator, assigning operator
@@ -249,9 +268,10 @@ function cleanInput() {
         }
     }
         if (operatorIndex != -1) {
-            // default to 0 as first term when using operator keys without adding values first
+            // default to 0 as first term when using operator keys without adding values first and set operator
             if (operatorIndex == 0 && inputArray.length == 1) {
                 inputArray.unshift('0');
+                operator = inputArray[1];
             }
             // slice the inputArray to get first number array
             firstNumberArray = inputArray.slice(0, operatorIndex);
