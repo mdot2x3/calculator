@@ -23,7 +23,7 @@ html, body {
     padding-right: 20px;
     margin: 10px;
     height: 20%;
-    color: white;    
+    color: white;  
 }
 
 .calc-container {
@@ -61,6 +61,10 @@ html, body {
 
 .key:hover {
     background-color: hsla(0, 0%, 10%, 0.950);
+}
+
+.key:active {
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 2px, rgba(0, 0, 0, 0.3) 0px 3px 6px -1px, rgba(0, 0, 0, 0.2) 0px -1px 0px inset;
 }
 
 .footer {
